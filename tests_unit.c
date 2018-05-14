@@ -6,7 +6,11 @@
 
 #include "wallet.h"
 #include "bip32.h"
-#include "utils.h"
+#include “utils.h"
+#include "random.h"
+#include "utest.h"
+#include "uECC.h"
+#include "ecc.h"
 
 
 static void test(void)
@@ -27,10 +31,10 @@ static void test(void)
     printf("the path's public key:%s\n",str);
 }
 
-static void test(void)
+static void sign(void)
 {
-uint8_t sig[64], sig2[64], priv_key[32], msg[32], der[256];
-    size_t i, N = 20;
+   uint8_t sig[64], sig2[64], priv_key[32], msg[32], der[256];
+    size_t i;
     int der_len;
 
     // secp256k1
@@ -39,9 +43,6 @@ uint8_t sig[64], sig2[64], priv_key[32], msg[32], der[256];
 
     u_assert_int_eq(0, bitcoin_ecc.ecc_sign(priv_key, msg, sizeof(msg), sig, NULL,
                                                 ECC_SECP256k1));
-    for(i=0;i<sizeof(sig);i++)
-    printf("%d ",sig[i]);
-    printf("\n");
     u_assert_int_eq(0, !(der_len = ecc_sig_to_der(sig, der)));
     u_assert_int_eq(0, ecc_der_to_sig(der, der_len, sig2));
     u_assert_mem_eq(sig, sig2, sizeof(sig));
