@@ -40,6 +40,7 @@
 #endif
 
 static int count = 64;
+static secp256k1_context *ctx = NULL;
 
 void test_ecdsa_end_to_end(void) {
     unsigned char extra[32] = {0x00};
