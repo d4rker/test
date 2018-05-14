@@ -28,9 +28,10 @@ static void test(void)
     char path[] = "m/0/2147483647'/1/2147483646'/2";
     wallet_generate_key(&node, path, private_key_master, chain_code_master);
     hdnode_serialize_public(&node, str, sizeof(str));
-    printf("the seed hex:%s\n","fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542");
-    printf("the path:%s\n",path);
-    printf("the path's public key:%s\n",str);
+    printf("the seed hex: %s\n","fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542");
+    printf("the path: %s\n",path);
+    printf("the path's public key: %s\n",str);
+    printf("s\n");
 }
 
 static void sign(void)
@@ -41,8 +42,8 @@ static void sign(void)
     random_bytes(priv_key, sizeof(priv_key), 0);
     random_bytes(msg, sizeof(msg), 0);
 
-    printf("%s\n",utils_uint8_to_hex(priv_key,sizeof(priv_key)));
-    printf("%s\n",utils_uint8_to_hex(msg,sizeof(msg)));
+    printf("the private key: %s\n",utils_uint8_to_hex(priv_key,sizeof(priv_key)));
+    printf("the unsign msg: %s\n",utils_uint8_to_hex(msg,sizeof(msg)));
 
     u_assert_int_eq(0, bitcoin_ecc.ecc_sign(priv_key, msg, sizeof(msg), sig, NULL,
                                                 ECC_SECP256k1));
