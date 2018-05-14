@@ -42,6 +42,20 @@
 static int count = 64;
 static secp256k1_context *ctx = NULL;
 
+void random_scalar_order_test(secp256k1_scalar *num) {
+    do {
+        unsigned char b32[32];
+        int overflow = 0;
+        secp256k1_rand256_test(b32);
+        secp256k1_scalar_set_b32(num, b32, &overflow);
+        if (overflow || secp256k1_scalar_is_zero(num)) {
+            continue;
+        }
+        break;
+    } while(1);
+}
+
+
 void test_ecdsa_end_to_end(void) {
     unsigned char extra[32] = {0x00};
     unsigned char privkey[32];
