@@ -6,12 +6,14 @@
 
 #include "wallet.h"
 #include "bip32.h"
-#include “utils.h"
+#include "utils.h"
 #include "random.h"
 #include "utest.h"
 #include "uECC.h"
 #include "ecc.h"
 
+int U_TESTS_RUN = 0;
+int U_TESTS_FAIL = 0;
 
 static void test(void)
 {
@@ -34,12 +36,13 @@ static void test(void)
 static void sign(void)
 {
    uint8_t sig[64], sig2[64], priv_key[32], msg[32], der[256];
-    size_t i;
     int der_len;
-
     // secp256k1
     random_bytes(priv_key, sizeof(priv_key), 0);
     random_bytes(msg, sizeof(msg), 0);
+
+    printf("%s\n",utils_uint8_to_hex(priv_key,sizeof(priv_key)));
+    printf("%s\n",utils_uint8_to_hex(msg,sizeof(msg)));
 
     u_assert_int_eq(0, bitcoin_ecc.ecc_sign(priv_key, msg, sizeof(msg), sig, NULL,
                                                 ECC_SECP256k1));
@@ -47,9 +50,9 @@ static void sign(void)
     u_assert_int_eq(0, ecc_der_to_sig(der, der_len, sig2));
     u_assert_mem_eq(sig, sig2, sizeof(sig));
 
- }        
+ }
 int main(void)
-{   
+{
     test();
     sign();
     return 0;
