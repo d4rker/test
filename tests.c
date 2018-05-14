@@ -40,7 +40,6 @@
 #endif
 
 static int count = 64;
-static secp256k1_context *ctx = NULL;
 
 void random_scalar_order_test(secp256k1_scalar *num) {
     do {
