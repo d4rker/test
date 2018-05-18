@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
     bitcoin_ecc.ecc_sign(priv_bytes, utils_hex_to_uint8(digest_exp), sizeof(digest_exp), sig, NULL, ECC_SECP256k1);
     //sign 
-
+   
 
     bitcoin_ecc.ecc_get_public_key33(priv_key, pub_key33, ECC_SECP256k1);
 
@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     
     bitcoin_ecc.ecc_verify(pub_key65, sig, msg, msg_len, curve)
     bitcoin_ecc.ecc_verify(pub_key33, sig, msg, msg_len, curve)
+        
     // copy signature to the OpenSSL struct
     ECDSA_SIG *signature = ECDSA_SIG_new();
     BN_bin2bn(sig, 32, signature->r);
@@ -38,14 +39,5 @@ int main(int argc, char *argv[])
 
     printf("%s\n",BN_bn2dec(signature->r));
     printf("%s\n",BN_bn2dec(signature->s));
-
-    // compute the digest of the message
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, utils_hex_to_uint8(digest_exp), sizeof(digest_exp));
-    SHA256_Final(hash, &sha256);
-    printf("%d\n",ECDSA_do_verify(hash, 32, signature, eckey));
-    ECDSA_SIG_free(signature);
-    EC_KEY_free(eckey);
-
     return 0;
 }
