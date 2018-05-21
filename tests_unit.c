@@ -38,10 +38,11 @@ static void test(char *path)
     printf("the path: %s\n",path);
     printf("the path's private key: %s\n",str);
     printf("\n");
-
+    
     memcpy(msg,utils_hex_to_uint8("546869732069732061207665727920636F6E666964656E7469616C206D657373616765"),sizeof(msg));
     res = bitcoin_ecc.ecc_sign(node.private_key, msg, sizeof(msg), sig, NULL,ECC_SECP256k1);
     
+    signature=ECDSA_SIG_new();
     printf("r: %s\n", BN_bn2dec(signature->r));printf("s: %s\n\n", BN_bn2dec(signature->s));
     
     printf("r: %s\n", BN_bn2hex(signature->r));printf("s: %s\n", BN_bn2hex(signature->s));
