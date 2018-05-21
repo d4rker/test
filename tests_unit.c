@@ -7,6 +7,7 @@
 #include "wallet.h"
 #include "bip32.h"
 #include "utils.h"
+#include "ecc.h"
 
 #include <openssl/ecdsa.h>
 #include <openssl/obj_mac.h>
@@ -19,6 +20,7 @@ static void test(char *path)
     char str[112];
     uint8_t private_key_master[32],chain_code_master[32];
     uint8_t msg[32],sig[64];
+    int res;
     
 
     hdnode_from_seed(utils_hex_to_uint8("fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542"),64, &node);
