@@ -21,6 +21,7 @@ static void test(char *path)
     uint8_t private_key_master[32],chain_code_master[32];
     uint8_t msg[32],sig[64];
     int res;
+    ECDSA_SIG *signature;
     
 
     hdnode_from_seed(utils_hex_to_uint8("fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542"),64, &node);
@@ -40,6 +41,10 @@ static void test(char *path)
 
     memcpy(msg,utils_hex_to_uint8("546869732069732061207665727920636F6E666964656E7469616C206D657373616765"),sizeof(msg));
     res = bitcoin_ecc.ecc_sign(node.private_key, msg, sizeof(msg), sig, NULL,ECC_SECP256k1);
+    
+    printf("r: %s\n", BN_bn2dec(signature->r));printf("s: %s\n\n", BN_bn2dec(signature->s));
+    
+    printf("r: %s\n", BN_bn2hex(signature->r));printf("s: %s\n", BN_bn2hex(signature->s));
     printf("\nsig res=%d success!\n",res);
 
 }
