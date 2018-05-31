@@ -14,6 +14,87 @@
 #include <openssl/sha.h>
 #include <stdint.h>
 
+int wallet_generate_key(HDNode *node, const char *keypath, const uint8_t *privkeymaster,
+                        const uint8_t *chaincode);
+
+int wallet_generate_key(HDNode *node, const char *keypath, const uint8_t *privkeymaster,
+                        const uint8_t *chaincode)
+{
+    static char delim[] = "/";
+    static char prime[] = "phH\'";
+    static char digits[] = "0123456789";
+    uint64_t idx = 0;
+
+    char *kp = strdup(keypath);
+    if (!kp) {
+        return 1;
+    }
+
+    if (strlens(keypath) < strlens("m/")) {
+        goto err;
+    }
+
+    if (kp[0] != 'm' || kp[1] != '/') {
+        goto err;
+    }
+
+    node->depth = 0;
+    node->child_num = 0;
+    node->fingerprint = 0;
+    memcpy(node->chain_code, chaincode, 32);
+    memcpy(node->private_key, privkeymaster, 32);
+    hdnode_fill_public_key(node);
+
+    char *pch = strtok(kp + 2, delim);
+    if (pch == NULL) {
+        goto err;
+    }
+    int has_prm = 0;
+    while (pch != NULL) {
+        size_t i = 0;
+        int prm = 0;
+        size_t pch_len = strlens(pch);
+        for ( ; i < pch_len; i++) {
+            if (strchr(prime, pch[i])) {
+                if (i != pch_len - 1) {
+                    goto err;
+                }
+                prm = 1;
+                has_prm = 1;
+            } else if (!strchr(digits, pch[i])) {
+                goto err;
+            }
+        }
+        if (prm && pch_len == 1) {
+            goto err;
+        }
+        idx = strtoull(pch, NULL, 10);
+        if (idx > UINT32_MAX) {
+            goto err;
+        }
+
+        if (prm) {
+            if (hdnode_private_ckd_prime(node, idx) != 0) {
+                goto err;
+            }
+        } else {
+            if (hdnode_private_ckd(node, idx) != 0) {
+                goto err;
+            }
+        }
+        pch = strtok(NULL, delim);
+    }
+    if (!has_prm) {
+        goto err;
+    }
+    free(kp);
+    return 0;
+
+err:
+    free(kp);
+    return 1;
+}
+
 static void test(char *path)
 {
     HDNode node;
